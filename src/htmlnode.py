@@ -22,6 +22,8 @@ class HTMLNode():
     def props_to_html(self)->str:
         """Converts props into an html string"""
         # href="https://www.google.com" target="_blank"
+        if self.props is None:
+            return ""
         return "".join([f' {key}="{val}"' for key,val in self.props.items()])
 
     def __repr__(self)->str:
