@@ -3,6 +3,7 @@
 from textnode import TextNode, TextType
 from htmlnode import HTMLNode
 from leafnode import LeafNode
+from parentnode import ParentNode
 
 def main()->'str':
     """Entry function for python code"""
@@ -19,15 +20,17 @@ def main()->'str':
     "target": "_blank",
 }
 
-    dummy_html_node = LeafNode(
-        "testtag",
-        "testvalue",
-        None,
-        dummy_props
+    node = ParentNode(
+        "p",
+        [
+            LeafNode("b", "Bold text"),
+            LeafNode(None, "Normal text"),
+            LeafNode("i", "italic text"),
+            LeafNode(None, "Normal text"),
+        ],
     )
 
-    #print(dummy_html_node.props_to_html())
-    print(dummy_html_node.to_html())
-    #print(repr(dummy_html_node))
+    print(node.to_html())
+
 
 main()
