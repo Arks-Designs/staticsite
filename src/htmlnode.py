@@ -33,3 +33,7 @@ class HTMLNode():
         for key, val in self.props.items():
             res += f"{key}                  {val}\n"
         return res
+
+    def __eq__(self, other_node):
+        return (self.tag, self.value, self.children, self.props) == \
+            (other_node.tag, other_node.value, other_node.children, other_node.props)

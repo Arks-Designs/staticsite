@@ -13,7 +13,7 @@ def main()->'str':
         "https://sample-url.com"
     )
 
-    print(dummy_text_node)
+    #print(dummy_text_node)
 
     dummy_props = {
     "href": "https://www.google.com",
@@ -30,7 +30,17 @@ def main()->'str':
         ],
     )
 
-    print(node.to_html())
+    node_t = TextNode(
+            "This is some sample text",
+            TextType.LINK,
+            "https://sample-url.com"
+        )
+    node_l = LeafNode("a", "This is some sample text", None, {"href": "https://sample-url.com"})
+
+    print(node_t.text_node_to_html_node())
+    print("\n\n\n\n")
+    print(node_l)
+    print(node_t.text_node_to_html_node() == node_l)
 
 
 main()
