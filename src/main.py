@@ -1,5 +1,6 @@
 """Entry module for python code"""
 
+from textfunctions import split_nodes_delimiter
 from textnode import TextNode, TextType
 from htmlnode import HTMLNode
 from leafnode import LeafNode
@@ -37,10 +38,10 @@ def main()->'str':
         )
     node_l = LeafNode("a", "This is some sample text", None, {"href": "https://sample-url.com"})
 
-    print(node_t.text_node_to_html_node())
-    print("\n\n\n\n")
-    print(node_l)
-    print(node_t.text_node_to_html_node() == node_l)
+    node = TextNode("This is text with a `code block`", TextType.TEXT)
+    new_nodes = split_nodes_delimiter([node], "`", TextType.CODE)
+    print(new_nodes)
+    print(new_nodes)
 
 
 main()

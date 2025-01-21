@@ -2,6 +2,7 @@ import unittest
 
 from textnode import TextNode, TextType
 from leafnode import LeafNode
+from textfunctions import split_nodes_delimiter
 
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
