@@ -1,6 +1,6 @@
 """Entry module for python code"""
 
-from textfunctions import split_nodes_delimiter
+from textfunctions import split_nodes_delimiter, extract_markdown_images, extract_markdown_links
 from textnode import TextNode, TextType
 from htmlnode import HTMLNode
 from leafnode import LeafNode
@@ -40,8 +40,13 @@ def main()->'str':
 
     node = TextNode("This is text with a `code block`", TextType.TEXT)
     new_nodes = split_nodes_delimiter([node], "`", TextType.CODE)
-    print(new_nodes)
-    print(new_nodes)
+    
+    text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+    print(extract_markdown_images(text))
+
+    text = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+    print(extract_markdown_links(text))
+
 
 
 main()
