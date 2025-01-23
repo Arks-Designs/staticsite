@@ -89,3 +89,10 @@ def text_to_textnodes(text:str)->list[TextNode]:
     nodes = split_nodes(nodes, "image")
     nodes = split_nodes(nodes, "link")
     return nodes
+
+def markdown_to_blocks(markdown:str)->list[str]:
+    """Module to break documents into blocks"""
+    blocks = markdown.split("\n\n")
+    blocks = list(map(str.strip, blocks))
+    blocks = list(filter(lambda x: x not in ("", "\n"), blocks))
+    return blocks

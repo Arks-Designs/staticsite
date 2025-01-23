@@ -38,8 +38,14 @@ def main()->'str':
         )
     node_l = LeafNode("a", "This is some sample text", None, {"href": "https://sample-url.com"})
 
-    text = "This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
-    print(text_to_textnodes(text))
+    text = """# This is a heading
+
+        This is a paragraph of text. It has some **bold** and *italic* words inside of it.
+
+        * This is the first list item in a list block
+        * This is a list item
+        * This is another list item"""
+    print(markdown_to_blocks(text))
 
 
 main()
