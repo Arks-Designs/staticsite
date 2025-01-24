@@ -38,14 +38,9 @@ def main()->'str':
         )
     node_l = LeafNode("a", "This is some sample text", None, {"href": "https://sample-url.com"})
 
-    text = """# This is a heading
-
-        This is a paragraph of text. It has some **bold** and *italic* words inside of it.
-
-        * This is the first list item in a list block
-        * This is a list item
-        * This is another list item"""
-    print(markdown_to_blocks(text))
+    block = """>test test
+> test test test"""
+    print(block_to_block_type(block))
 
 
 main()

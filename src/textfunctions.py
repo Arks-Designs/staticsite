@@ -96,3 +96,33 @@ def markdown_to_blocks(markdown:str)->list[str]:
     blocks = list(map(str.strip, blocks))
     blocks = list(filter(lambda x: x not in ("", "\n"), blocks))
     return blocks
+
+def block_to_block_type(block:str)->str:
+    """Module to determine the type of a block
+    options are paragraph, heading, code, quote,
+    unordered_list, ordered_list"""
+    if re.match(r"#{1,6} .+", block):
+        return "heading"
+    
+    if block[:3] == "```" and block[-3:] == "```":
+        return "code"
+    
+    split_lines = block.split("\n")
+    num_lines = len(split_lines)
+    if len(list(filter(lambda x: x.startswith(">"), split_lines))) == num_lines:
+        return "quote"
+    
+    unordered_cond = lambda x: x[:2] in ("* ", "- ")
+    if len(list(filter(unordered_cond, split_lines))) == num_lines:
+        return "unordered_list"
+    
+    count = 1
+    ordered_list_flag = True
+    for line in split_lines:
+        if not line.startswith(f"{count}. "):
+            ordered_list_flag = False
+        count += 1
+    if ordered_list_flag:
+        return "ordered_list"
+
+    return "paragraph"

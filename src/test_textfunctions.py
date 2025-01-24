@@ -237,5 +237,94 @@ class TestTextFunctions(unittest.TestCase):
         ]
         self.assertEqual(markdown_to_blocks(text), expected_results)
 
+    def test_block_to_block_type_heading_1(self):
+        block = "# test block"
+        self.assertEqual(block_to_block_type(block), "heading")
+
+    def test_block_to_block_type_heading_2(self):
+        block = "###### test block"
+        self.assertEqual(block_to_block_type(block), "heading")
+    
+    def test_block_to_block_type_heading_too_many_hash(self):
+        block = "####### test block"
+        self.assertEqual(block_to_block_type(block), "paragraph")
+
+    def test_block_to_block_type_heading_header_but_paragraph(self):
+        block = "test start ##### test block"
+        self.assertEqual(block_to_block_type(block), "paragraph")
+
+    def test_block_to_block_type_heading_multiline(self):
+        block = """### heading
+            should still work"""
+        self.assertEqual(block_to_block_type(block), "heading")
+
+    def test_block_to_block_type_code(self):
+        block = "```code block test```"
+        self.assertEqual(block_to_block_type(block), "code")
+    
+    def test_block_to_block_type_code_not_enough_ticks(self):
+        block = "``code block test``"
+        self.assertEqual(block_to_block_type(block), "paragraph")
+
+    def test_block_to_block_type_code_not_enough_ticks(self):
+        block = "``code block test``"
+        self.assertEqual(block_to_block_type(block), "paragraph")
+
+    def test_block_to_block_type_code_big_block(self):
+        block = """```code block 
+        test```"""
+        self.assertEqual(block_to_block_type(block), "code")
+
+    def test_block_to_block_type_quote(self):
+        block = """>test test
+> test test test"""
+        self.assertEqual(block_to_block_type(block), "quote")
+
+    def test_block_to_block_type_empty(self):
+        block = """"""
+        self.assertEqual(block_to_block_type(block), "paragraph")
+
+    def test_block_to_block_type_unordered_dash(self):
+        block = """- asdfasdf
+- asdfasdf
+- asfasdf"""
+        self.assertEqual(block_to_block_type(block), "unordered_list")
+
+    def test_block_to_block_type_unordered_star(self):
+        block = """* asdfasdf
+* asdfasdf
+* asfasdf"""
+        self.assertEqual(block_to_block_type(block), "unordered_list")
+
+    def test_block_to_block_type_unordered_mixed(self):
+        block = """- asdfasdf
+* asdfasdf
+- asfasdf"""
+        self.assertEqual(block_to_block_type(block), "unordered_list")
+
+    def test_block_to_block_type_unordered_missing_space(self):
+        block = """-asdfasdf
+- asdfasdf
+- asfasdf"""
+        self.assertEqual(block_to_block_type(block), "paragraph")
+
+    def test_block_to_block_type_ordered(self):
+        block = """1. asdfasdf
+2. asdfasdf
+3. asfasdf"""
+        self.assertEqual(block_to_block_type(block), "ordered_list")
+
+    def test_block_to_block_type_ordered_missing_space(self):
+        block = """1.asdfasdf
+2. asdfasdf
+3. asfasdf"""
+        self.assertEqual(block_to_block_type(block), "paragraph")
+
+    def test_block_to_block_type_ordered_wrong_order(self):
+        block = """1. asdfasdf
+3. asdfasdf
+2. asfasdf"""
+        self.assertEqual(block_to_block_type(block), "paragraph")
+
 if __name__ == "__main__":
     unittest.main()
