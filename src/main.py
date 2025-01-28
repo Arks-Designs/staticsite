@@ -31,16 +31,9 @@ def main()->'str':
         ],
     )
 
-    node_t = TextNode(
-            "This is some sample text",
-            TextType.LINK,
-            "https://sample-url.com"
-        )
-    node_l = LeafNode("a", "This is some sample text", None, {"href": "https://sample-url.com"})
-
-    block = """>test test
-> test test test"""
-    print(block_to_block_type(block))
+    text = """1. hello *there*
+2. ![abc](hello.com)"""
+    print(markdown_to_html_node(text))
 
 
 main()

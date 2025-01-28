@@ -326,5 +326,64 @@ class TestTextFunctions(unittest.TestCase):
 2. asfasdf"""
         self.assertEqual(block_to_block_type(block), "paragraph")
 
+    def test_markdown_to_html(self):
+        text = """1. hello *there*
+2. ![abc](hello.com)"""
+        expected_results = HTMLNode("div", None, [
+            HTMLNode("ol", None, [
+                HTMLNode("li", None, [
+                    HTMLNode(None, "hello "),
+                    HTMLNode("i", "there")
+                ]),
+                HTMLNode("li", None, [
+                    HTMLNode("img", None, None, {'src': 'hello.com', 'alt': 'abc'})
+                ])
+            ])
+        ])
+        self.assertEqual(markdown_to_html_node(text), expected_results)
+
+    def test_markdown_to_html_multi_blocks(self):
+        text = """```What can we do in a code block```
+
+### This is a tier 3 header
+
+* line 1
+* line 2 *italics*
+
+Random set of text [abc](test.com)
+Random set of **text 2**
+
+>Quote line 1
+>Quote line 2"""
+        expected_results = HTMLNode("div", None, [
+            HTMLNode("pre", None, [
+                HTMLNode("code", None, [
+                    HTMLNode(None, "What can we do in a code block")
+                ])
+            ]),
+            HTMLNode("h3", None, [
+                HTMLNode(None, "This is a tier 3 header")
+            ]),
+            HTMLNode("ul", None, [
+                HTMLNode("li", None, [
+                    HTMLNode(None, "line 1")
+                ]),
+                HTMLNode("li", None, [
+                    HTMLNode(None, "line 2 "),
+                    HTMLNode("i", "italics")
+                ])
+            ]),
+            HTMLNode("p", None, [
+                HTMLNode(None, "Random set of text "),
+                HTMLNode("a", "abc", None, {"href": "test.com"}),
+                HTMLNode(None, "\nRandom set of "),
+                HTMLNode("b", "text 2")
+            ]),
+            HTMLNode("blockquote", None, [
+                HTMLNode(None, "Quote line 1\nQuote line 2")
+            ])
+        ])
+        self.assertEqual(markdown_to_html_node(text), expected_results)
+
 if __name__ == "__main__":
     unittest.main()

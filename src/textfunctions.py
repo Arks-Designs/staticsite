@@ -2,6 +2,9 @@
 
 import re
 from textnode import TextNode, TextType
+from htmlnode import HTMLNode
+from parentnode import ParentNode
+from leafnode import LeafNode
 
 def split_nodes_delimiter(nodes: list[TextNode], delimiter: str, text_type: TextType)->list[TextNode]:
     """Module to split a line of markdown into text nodes"""
@@ -11,7 +14,9 @@ def split_nodes_delimiter(nodes: list[TextNode], delimiter: str, text_type: Text
         if len(split_text) == 1:
             results.append(node)
         else:
-            if node.text.startswith(delimiter):
+            if node.text.startswith(delimiter) and node.text.endswith(delimiter):
+                results.append(TextNode(split_text[1], text_type))
+            elif node.text.startswith(delimiter):
                 results.append(TextNode(split_text[1], text_type))
                 results.append(TextNode(split_text[2], node.text_type))
             elif node.text.endswith(delimiter):
@@ -126,3 +131,73 @@ def block_to_block_type(block:str)->str:
         return "ordered_list"
 
     return "paragraph"
+
+def markdown_to_html_node(text:str)->HTMLNode:
+    """Module to convert a markdown text to html"""
+    blocks = markdown_to_blocks(text)
+    block_html_nodes = []
+    for block in blocks:
+        block_type = block_to_block_type(block)
+        top_html_nodes = text_to_children(block, block_type)
+
+        block_html_nodes.append(top_html_nodes)
+    return HTMLNode("div", None, block_html_nodes)
+
+def strip_text_on_type(text:str, block_type:str)->str:
+    """Module to strip text based on block type"""
+    if block_type == "heading":
+        heading_chars = r"#{1,6} "
+        start = re.match(heading_chars, text).span()[1]
+        return text[start:]
+    
+    if block_type == "code":
+        return text[3:-3]
+    
+    split_lines = text.split("\n")
+    if block_type == "quote":
+        lines = list(map(lambda x: x[1:], split_lines))
+        return "\n".join(lines)
+
+    if block_type == "unordered_list":
+        lines = list(map(lambda x: x[2:], split_lines))
+        return "\n".join(lines)
+    
+    if block_type == "ordered_list":
+        lines = list(map(lambda x: x[3:], split_lines))
+        return "\n".join(lines)
+
+    return text
+
+def text_to_children(text:str, block_type:str)->list[HTMLNode]:
+    """Module to take text and convert to html nodes"""
+
+    cleaned_block = strip_text_on_type(text, block_type)
+
+    if block_type in ["unordered_list", "ordered_list"]:
+        lines = cleaned_block.split("\n")
+        text_nodes = list(map(text_to_textnodes, lines))
+        html_nodes = list(map(lambda y: list(map(lambda x: x.text_node_to_html_node(), y)), text_nodes))
+        list_html_nodes = list(map(lambda x: HTMLNode("li", None, x), html_nodes))
+
+        if block_type == "unordered_list":
+            return HTMLNode("ul", None, list_html_nodes)
+
+        if block_type == "ordered_list":
+            return HTMLNode("ol", None, list_html_nodes)
+
+    text_nodes = text_to_textnodes(cleaned_block)
+    html_nodes = list(map(lambda x: x.text_node_to_html_node(), text_nodes))
+
+    if block_type == "quote":
+        return HTMLNode("blockquote", None, html_nodes)
+
+    if block_type == "code":
+        return HTMLNode("pre", None, [HTMLNode("code", None, html_nodes)])
+
+    if block_type == "heading":
+        heading_chars = r"#{1,6} "
+        start = re.match(heading_chars, text).span()[1]
+        heading_tag = f"h{start - 1}"
+        return HTMLNode(heading_tag, None, html_nodes)
+
+    return HTMLNode("p", None, html_nodes)

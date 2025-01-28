@@ -28,10 +28,13 @@ class HTMLNode():
 
     def __repr__(self)->str:
         res = f"HTMLNode({self.tag}, {self.value})\n"
-        res += f"Children: {self.children}\n"
-        res += "Props Keys           Values\n-----------------------\n"
-        for key, val in self.props.items():
-            res += f"{key}                  {val}\n"
+        if self.children:
+            res += f"Children: {self.children}\n"
+
+        if self.props:
+            res += "Props Keys           Values\n-----------------------\n"
+            for key, val in self.props.items():
+                res += f"{key}                  {val}\n"
         return res
 
     def __eq__(self, other_node):
