@@ -385,5 +385,58 @@ Random set of **text 2**
         ])
         self.assertEqual(markdown_to_html_node(text), expected_results)
 
+    def test_extract_title(self):
+        text = """# Sample heading
+
+### Sample heading two
+
+* list one
+* list two
+
+some random text"""
+        self.assertEqual(extract_title(text), "Sample heading")
+
+    def test_extract_title_not_first(self):
+        text = """### Sample heading two
+
+# Sample heading
+
+* list one
+* list two
+
+some random text"""
+        self.assertEqual(extract_title(text), "Sample heading")
+
+    def test_extract_title_random_white_space(self):
+        text = """### Sample heading two
+
+#     Sample heading      
+
+* list one
+* list two
+
+some random text"""
+        self.assertEqual(extract_title(text), "Sample heading")
+
+    def test_extract_title_multiple_headings(self):
+        text = """# Sample heading
+
+# Sample heading two
+
+* list one
+* list two
+
+some random text"""
+        self.assertEqual(extract_title(text), "Sample heading")
+
+    def test_extract_title_no_heading(self):
+        text = """* list one
+* list two
+
+some random text"""
+        with self.assertRaises(ValueError):
+            extract_title(text)
+
+
 if __name__ == "__main__":
     unittest.main()

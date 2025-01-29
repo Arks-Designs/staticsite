@@ -201,3 +201,15 @@ def text_to_children(text:str, block_type:str)->list[HTMLNode]:
         return HTMLNode(heading_tag, None, html_nodes)
 
     return HTMLNode("p", None, html_nodes)
+
+def extract_title(markdown):
+    """Function to return the H1 heading line"""
+    blocks = markdown_to_blocks(markdown)
+    for block in blocks:
+        if block_to_block_type(block) == "heading":
+            if block.startswith("# "):
+                updated_text = block.replace("#", "", 1)
+                updated_text = updated_text.strip()
+                return updated_text
+            
+    raise ValueError("No h1 header in document")
