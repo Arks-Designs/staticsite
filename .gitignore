@@ -1,5 +1,4 @@
 venv
 __pycache__/
-public/index.html
-public/styles.css
+public/
 tests

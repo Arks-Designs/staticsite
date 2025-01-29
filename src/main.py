@@ -5,6 +5,7 @@ from textnode import TextNode, TextType
 from htmlnode import HTMLNode
 from leafnode import LeafNode
 from parentnode import ParentNode
+from staticfunctions import copy_from_static_to_public
 
 def main()->'str':
     """Entry function for python code"""
@@ -31,9 +32,7 @@ def main()->'str':
         ],
     )
 
-    text = """1. hello *there*
-2. ![abc](hello.com)"""
-    print(markdown_to_html_node(text))
+    copy_from_static_to_public("static", "public")
 
 
 main()
