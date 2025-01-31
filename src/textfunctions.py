@@ -141,7 +141,7 @@ def markdown_to_html_node(text:str)->HTMLNode:
         top_html_nodes = text_to_children(block, block_type)
 
         block_html_nodes.append(top_html_nodes)
-    return HTMLNode("div", None, block_html_nodes)
+    return ParentNode("div", block_html_nodes)
 
 def strip_text_on_type(text:str, block_type:str)->str:
     """Module to strip text based on block type"""
@@ -155,7 +155,7 @@ def strip_text_on_type(text:str, block_type:str)->str:
     
     split_lines = text.split("\n")
     if block_type == "quote":
-        lines = list(map(lambda x: x[1:], split_lines))
+        lines = list(map(lambda x: x[2:], split_lines))
         return "\n".join(lines)
 
     if block_type == "unordered_list":
@@ -177,30 +177,30 @@ def text_to_children(text:str, block_type:str)->list[HTMLNode]:
         lines = cleaned_block.split("\n")
         text_nodes = list(map(text_to_textnodes, lines))
         html_nodes = list(map(lambda y: list(map(lambda x: x.text_node_to_html_node(), y)), text_nodes))
-        list_html_nodes = list(map(lambda x: HTMLNode("li", None, x), html_nodes))
+        list_html_nodes = list(map(lambda x: ParentNode("li", x), html_nodes))
 
         if block_type == "unordered_list":
-            return HTMLNode("ul", None, list_html_nodes)
+            return ParentNode("ul", list_html_nodes)
 
         if block_type == "ordered_list":
-            return HTMLNode("ol", None, list_html_nodes)
+            return ParentNode("ol", list_html_nodes)
 
     text_nodes = text_to_textnodes(cleaned_block)
     html_nodes = list(map(lambda x: x.text_node_to_html_node(), text_nodes))
 
     if block_type == "quote":
-        return HTMLNode("blockquote", None, html_nodes)
+        return ParentNode("blockquote", html_nodes)
 
     if block_type == "code":
-        return HTMLNode("pre", None, [HTMLNode("code", None, html_nodes)])
+        return ParentNode("pre", [ParentNode("code", html_nodes)])
 
     if block_type == "heading":
         heading_chars = r"#{1,6} "
         start = re.match(heading_chars, text).span()[1]
         heading_tag = f"h{start - 1}"
-        return HTMLNode(heading_tag, None, html_nodes)
+        return ParentNode(heading_tag, html_nodes)
 
-    return HTMLNode("p", None, html_nodes)
+    return ParentNode("p", html_nodes)
 
 def extract_title(markdown):
     """Function to return the H1 heading line"""

@@ -5,34 +5,19 @@ from textnode import TextNode, TextType
 from htmlnode import HTMLNode
 from leafnode import LeafNode
 from parentnode import ParentNode
-from staticfunctions import copy_from_static_to_public
+from staticfunctions import copy_from_static_to_public, generate_page, generate_pages_recursive
 
 def main()->'str':
     """Entry function for python code"""
-    dummy_text_node = TextNode(
-        "This is some sample text",
-        TextType.LINK,
-        "https://sample-url.com"
+    copy_from_static_to_public(
+        "/Users/jrpatton/Documents/Code/BootDev/staticsite/static",
+        "/Users/jrpatton/Documents/Code/BootDev/staticsite/public"
     )
 
-    #print(dummy_text_node)
-
-    dummy_props = {
-    "href": "https://www.google.com",
-    "target": "_blank",
-}
-
-    node = ParentNode(
-        "p",
-        [
-            LeafNode("b", "Bold text"),
-            LeafNode(None, "Normal text"),
-            LeafNode("i", "italic text"),
-            LeafNode(None, "Normal text"),
-        ],
+    generate_pages_recursive(
+        "/Users/jrpatton/Documents/Code/BootDev/staticsite/content",
+        "/Users/jrpatton/Documents/Code/BootDev/staticsite/template.html",
+        "/Users/jrpatton/Documents/Code/BootDev/staticsite/public"
     )
-
-    copy_from_static_to_public("static", "public")
-
 
 main()

@@ -20,3 +20,14 @@ class ParentNode(HTMLNode):
         children_result = "".join([child.to_html() for child in self.children])
         result = f"<{self.tag}{self.props_to_html()}>{children_result}</{self.tag}>"
         return result
+    
+    def __repr__(self)->str:
+        res = f"HTMLNode({self.tag}, None)\n"
+        if self.children:
+            res += f"Children: {self.children}\n"
+
+        if self.props:
+            res += "Props Keys           Values\n-----------------------\n"
+            for key, val in self.props.items():
+                res += f"{key}                  {val}\n"
+        return res
